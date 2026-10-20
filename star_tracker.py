@@ -4,17 +4,10 @@ import random
 
 # all calculations measuring angular radius not angular diameter bc as you get close to the sun, the apparent angular diameter changes bc you are not seeing the sun at infinity and cannot see the poles 
 R_sun = 0.002325235       # in AU
+rng = np.random.default_rng(42)
 
-def generate_noisy_measurements(true_value=0, noise_std=1.0, n=100, seed=42):
-    rng = np.random.default_rng(seed)
-    noise = rng.normal(loc=0.0, scale=noise_std, size=n)
-    measurements = true_value + noise
-    return measurements, true_value
-
-def add_noise(value=0, noise_std=1.0, seed=42):
-    rng = np.random.default_rng(seed)
-    noise = rng.normal(loc=0.0, scale=noise_std)
-    return float(value + noise)
+def add_noise(value=0, noise_std=1.0):
+    return float(value + rng.normal(0.0, noise_std))
 
 # coordinates in AU 
 def simulate_angular_radius(x, y, z, noise_std=0.0):
@@ -66,7 +59,7 @@ def get_pos_from_sun(r, theta, phi):
 if __name__ == "__main__":
     x, y, z = 3.9, 3.4, 0.07
     print(f"actual dist: ", np.sqrt(x**2 + y**2 + z**2))
-    ang_r = simulate_angular_radius(x, y, z, error=0.0)
+    ang_r = simulate_angular_radius(x, y, z, noise_std=0.0)
     theta, phi = simulate_sun_direction(x, y, z)
     print(f"(ang_r, theta, phi): ({ang_r:0.10f}, {theta:10.10f}, {phi:10.10f})")
 
